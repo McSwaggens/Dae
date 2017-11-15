@@ -48,12 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Buffer.cs" />
+    <Compile Include="GLABuffer.cs" />
+    <Compile Include="CBuffer.cs" />
     <Compile Include="CharacterUnit.cs" />
     <Compile Include="Color.cs" />
+    <Compile Include="DFloat.cs" />
     <Compile Include="EndiStack.cs" />
+    <Compile Include="IInitialize.cs" />
+    <Compile Include="IShape.cs" />
     <Compile Include="IVector.cs" />
+    <Compile Include="Quad.cs" />
     <Compile Include="RenderTarget.cs" />
+    <Compile Include="Shape.cs" />
     <Compile Include="Stack.cs" />
     <Compile Include="UI\Canvas.cs" />
     <Compile Include="UI\Component.cs" />
@@ -65,7 +71,7 @@
     <Compile Include="IEnable.cs" />
     <Compile Include="IEndi.cs" />
     <Compile Include="IRender.cs" />
-    <Compile Include="IUniform.cs" />
+    <Compile Include="IGLType.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Material.cs" />
@@ -88,6 +94,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
@@ -100,9 +107,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\Unit.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

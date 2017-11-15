@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Dae
 {
-	public class Texture : IDisposable, IUniform, DObject
+	public struct Texture : IDisposable, IGLType, DObject
 	{
 		public int textureId;
 		public readonly Vector size;
@@ -13,6 +13,8 @@ namespace Dae
 		public Texture (int textureId)
 		{
 			this.textureId = textureId;
+			size = Vector.zero;
+			scale = Vector.one;
 		}
 
 		public Texture (Bitmap image, TextureFilter filter = TextureFilter.None)
@@ -69,7 +71,7 @@ namespace Dae
 			GL.DeleteTexture (textureId);
 		}
 
-		public void Upload (int locationId)
+		public void UniformUpload (int locationId)
 		{
 			GL.ActiveTexture (TextureUnit.Texture0 + Material.textureStack);
 			GL.BindTexture (TextureTarget.Texture2D, textureId);

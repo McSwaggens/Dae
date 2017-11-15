@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Dae
 {
@@ -10,7 +11,14 @@ namespace Dae
 		// List of all Materials
 		private List<Material> materials = new List<Material> ();
 
+		// List of all RenderTargets
+		private List<RenderTarget> renderTargets = new List<RenderTarget> ();
+
 		public EnableStack<RenderTarget> renderTargetStack = new EnableStack<RenderTarget> (false);
+
+		public void RenderTextBuffer (CBuffer buffer)
+		{
+		}
 
 		// Initialize the graphics library
 		internal void Initialize ()
@@ -25,6 +33,9 @@ namespace Dae
 
 			shaders.ForEach (shader => shader.Dispose ());
 			shaders.Clear ();
+
+			renderTargets.ForEach (rt => rt.Dispose ());
+			renderTargets.Clear ();
 		}
 
 		// Register a shader
@@ -37,6 +48,11 @@ namespace Dae
 		internal void RegisterMaterial (Material material)
 		{
 			materials.Add (material);
+		}
+
+		internal void RegisterRenderTarget (RenderTarget renderTarget)
+		{
+			renderTargets.Add (renderTarget);
 		}
 	}
 }

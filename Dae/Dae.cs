@@ -1,5 +1,8 @@
 ﻿using Dae.UI;
 using System.Collections.Generic;
+using System;
+using Dae.Properties;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Dae
 {
@@ -59,12 +62,25 @@ namespace Dae
 			{
 				Graphics.RegisterShader ((Shader)obj);
 			}
+
+			if (/* Material */ obj is Material)
+			{
+				Graphics.RegisterMaterial ((Material)obj);
+			}
+
+			if (/* RenderTarget */ obj is RenderTarget)
+			{
+				Graphics.RegisterRenderTarget ((RenderTarget)obj);
+			}
 		}
 
 		// Initialize/Start DAE
 		internal static void Start ()
 		{
 			DWindow window = new DWindow ();
+
+			// Initialize the Shape API
+			Shape.Initialize ();
 
 			// Create a graphics context ...
 			graphics = new Graphics ();
@@ -81,10 +97,14 @@ namespace Dae
 			Shutdown ();
 		}
 
+		private static Material unitMaterial;
+
 		// Main Loop
 		private static void Run ()
 		{
 			IsRunning = true;
+
+			Initialize ();
 
 			// Loop while DAE is supposed to be running
 			while (IsRunning)
@@ -101,6 +121,11 @@ namespace Dae
 			}
 
 			// End of the Run method, the Start method should begin shutting down DAE now...
+		}
+
+		private static void Initialize ()
+		{
+			unitMaterial = new Material (Shader.CreateShader (Resources.Unit), new Cell[] { });
 		}
 
 		private static void CheckWindowInput ()
@@ -125,6 +150,13 @@ namespace Dae
 		/// </summary>
 		private static void Render ()
 		{
+			GL.ClearColor (0.05f, 0.05f, 0.05f, 1);
+
+			unitMaterial.Enable ();
+
+			Shape.Enable (Shape.quad);
+			Shape.Draw ();
+
 			foreach (DWindow window in windows)
 			{
 				window.RenderFrameToScreen ();

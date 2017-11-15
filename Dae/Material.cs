@@ -5,11 +5,11 @@ namespace Dae
 {
 	public class Cell : IEnable, ICloneable
 	{
-		public IUniform value;
+		public IGLType value;
 		public int id;
 		public string name;
 
-		public Cell (string name, IUniform value = null)
+		public Cell (string name, IGLType value = null)
 		{
 			this.name = name;
 			this.value = value;
@@ -30,12 +30,12 @@ namespace Dae
 
 		public void Enable ()
 		{
-			value.Upload (id);
+			value.UniformUpload (id);
 		}
 
 		public object Clone ()
 		{
-			Cell cell = new Cell (name, (IUniform)value.Clone ());
+			Cell cell = new Cell (name, (IGLType)value.Clone ());
 			cell.id = id;
 			return cell;
 		}
@@ -82,7 +82,7 @@ namespace Dae
 
 			foreach (Cell cell in cells)
 			{
-				cell.value?.Upload (cell.id);
+				cell.value?.UniformUpload (cell.id);
 			}
 
 			if (timeId != -1)
@@ -110,7 +110,7 @@ namespace Dae
 			return -1;
 		}
 
-		public void Set (string name, IUniform uniformVariable)
+		public void Set (string name, IGLType uniformVariable)
 		{
 			foreach (Cell cell in cells)
 			{
@@ -121,7 +121,7 @@ namespace Dae
 			}
 		}
 
-		public void Set (int index, IUniform uniformVariable)
+		public void Set (int index, IGLType uniformVariable)
 		{
 			cells[index].value = uniformVariable;
 		}

@@ -8,6 +8,7 @@ namespace Dae.UI
 		public bool visible;
 		public Vector position;
 		public Vector size;
+		public CBuffer buffer;
 		public Canvas parent;
 
 		public bool HasParent => parent != null;

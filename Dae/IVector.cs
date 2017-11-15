@@ -2,7 +2,12 @@
 
 namespace Dae
 {
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+
 	public struct IVector
+#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
 	{
 		public static readonly IVector one = new IVector (1, 1);
 		public static readonly IVector zero = new IVector (0, 0);
@@ -46,6 +51,16 @@ namespace Dae
 		}
 
 		public override string ToString () => "x: {x}, y: {y}";
+
+		public static bool operator == (IVector a, IVector b)
+		{
+			return a.x == b.x && a.y == b.y;
+		}
+
+		public static bool operator != (IVector a, IVector b)
+		{
+			return a.x != b.x && a.y != b.y;
+		}
 
 		public static IVector operator + (IVector a, IVector b)
 		{

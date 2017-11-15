@@ -2,7 +2,7 @@
 
 namespace Dae
 {
-	public class Color : IUniform
+	public class Color : IGLType
 	{
 		public static readonly Color white = new Color (1, 1, 1);
 		public static readonly Color black = new Color ();
@@ -26,7 +26,7 @@ namespace Dae
 			return new Color (r, g, b, a);
 		}
 
-		public void Upload (int locationId)
+		public void UniformUpload (int locationId)
 		{
 			GL.Uniform4 (locationId, r, g, b, a);
 		}

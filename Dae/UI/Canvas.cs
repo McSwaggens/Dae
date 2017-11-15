@@ -7,28 +7,19 @@ namespace Dae.UI
 		// All components found inside of this Canvas
 		public List<Component> subComponents = new List<Component> ();
 
-		public Buffer buffer;
-
-		public Canvas (Canvas parentCanvas, Vector size, Buffer buffer = null)
+		public Canvas (Canvas parentCanvas, Vector size, CBuffer buffer = null)
 		{
 			this.size = size;
 			this.parent = parentCanvas;
-			buffer = buffer ?? new Buffer ();
+			buffer = buffer ?? new CBuffer (size);
 		}
 
 		public override void Render ()
 		{
-			// Enable the buffers renderTarget by pushing it to the renderTarget stack
-			Dae.Graphics.renderTargetStack.Push (buffer.renderTarget);
-
 			// Render all components found inside of this canvas
 			RenderSubComponents ();
 
-			// Pop the current renderTarget, enabling the last renderTarget
-			Dae.Graphics.renderTargetStack.Pop ();
-
 			// Render this canvas to the parent canvas
-			// TODO: Render to parent canvas
 		}
 
 		internal void RenderSubComponents ()

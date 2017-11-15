@@ -32,7 +32,7 @@ namespace Dae
 			this.isStatic = isStatic;
 		}
 
-		private void GenerateFrameBuffer (Vector size)
+		private void GenerateFrameBuffer (IVector size)
 		{
 			if (isStatic)
 			{
@@ -46,7 +46,7 @@ namespace Dae
 
 				colorBuffer = GL.GenTexture ();
 				GL.BindTexture (TextureTarget.Texture2D, colorBuffer);
-				GL.TexImage2D (TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, (int)size.x, (int)size.y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, (IntPtr)0);
+				GL.TexImage2D (TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, size.x, size.y, 0, PixelFormat.Rgb, PixelType.UnsignedByte, (IntPtr)0);
 				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
 				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 				GL.GenerateMipmap (GenerateMipmapTarget.Texture2D);
@@ -55,7 +55,7 @@ namespace Dae
 
 				depthBuffer = GL.GenRenderbuffer ();
 				GL.BindRenderbuffer (RenderbufferTarget.Renderbuffer, depthBuffer);
-				GL.RenderbufferStorage (RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, (int)size.x, (int)size.y);
+				GL.RenderbufferStorage (RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, size.x, size.y);
 
 				GL.FramebufferRenderbuffer (FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, depthBuffer);
 
@@ -76,8 +76,18 @@ namespace Dae
 
 		public void Regenerate (DWindow window)
 		{
+			Regenerate (new Vector (window.Width, window.Height));
+		}
+
+		public void Regenerate (IVector size)
+		{
+			if (isStatic)
+			{
+				return;
+			}
+
 			Dispose ();
-			GenerateFrameBuffer (new Vector (window.Width, window.Height));
+			GenerateFrameBuffer (size);
 		}
 
 		public void Dispose ()
