@@ -32,11 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MoonSharp.Interpreter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=921e73ce94aa17f8, processorArchitecture=MSIL">
+      <HintPath>..\packages\MoonSharp.2.0.0.0\lib\net40-client\MoonSharp.Interpreter.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,44 +54,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GLABuffer.cs" />
-    <Compile Include="CBuffer.cs" />
-    <Compile Include="CharacterUnit.cs" />
-    <Compile Include="Color.cs" />
-    <Compile Include="DFloat.cs" />
-    <Compile Include="EndiStack.cs" />
-    <Compile Include="IInitialize.cs" />
-    <Compile Include="IShape.cs" />
-    <Compile Include="IVector.cs" />
-    <Compile Include="Quad.cs" />
-    <Compile Include="RenderTarget.cs" />
-    <Compile Include="Shape.cs" />
-    <Compile Include="Stack.cs" />
-    <Compile Include="UI\Canvas.cs" />
-    <Compile Include="UI\Component.cs" />
-    <Compile Include="Dae.cs" />
-    <Compile Include="DObject.cs" />
-    <Compile Include="DWindow.cs" />
-    <Compile Include="Graphics.cs" />
-    <Compile Include="IDisable.cs" />
-    <Compile Include="IEnable.cs" />
-    <Compile Include="IEndi.cs" />
-    <Compile Include="IRender.cs" />
-    <Compile Include="IGLType.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="Material.cs" />
+    <Compile Include="Graphics\ColorPack.cs" />
+    <Compile Include="Utility\DMath.cs" />
+    <Compile Include="Graphics\GLABuffer.cs" />
+    <Compile Include="Core\CBuffer.cs" />
+    <Compile Include="Core\CUnit.cs" />
+    <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\DFloat.cs" />
+    <Compile Include="Utility\EndiStack.cs" />
+    <Compile Include="Interfaces\IUpdate.cs" />
+    <Compile Include="Core\IVector.cs" />
+    <Compile Include="Utility\Performance.cs" />
+    <Compile Include="Plugin\DPlugin.cs" />
+    <Compile Include="Plugin\DPluginInformation.cs" />
+    <Compile Include="Plugin\PluginSystem.cs" />
+    <Compile Include="Plugin\TestPlugin.cs" />
+    <Compile Include="Graphics\Quad.cs" />
+    <Compile Include="Graphics\RenderTarget.cs" />
+    <Compile Include="Core\RootCanvas.cs" />
+    <Compile Include="Utility\Scheduler.cs" />
+    <Compile Include="Scripting\Loader.cs" />
+    <Compile Include="Utility\Util.cs" />
+    <Compile Include="Utility\Stack.cs" />
+    <Compile Include="Utility\StackManager.cs" />
+    <Compile Include="Core\Canvas.cs" />
+    <Compile Include="Core\Component.cs" />
+    <Compile Include="Core\Dae.cs" />
+    <Compile Include="Core\DWindow.cs" />
+    <Compile Include="Core\Graphics.cs" />
+    <Compile Include="Interfaces\IDisable.cs" />
+    <Compile Include="Interfaces\IEnable.cs" />
+    <Compile Include="Interfaces\IEndi.cs" />
+    <Compile Include="Graphics\IGLType.cs" />
+    <Compile Include="Core\Line.cs" />
+    <Compile Include="Utility\Logger.cs" />
+    <Compile Include="Graphics\Material.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shader.cs" />
-    <Compile Include="ShaderPreProcessor.cs" />
-    <Compile Include="ShaderSource.cs" />
-    <Compile Include="ShaderSourceGroup.cs" />
-    <Compile Include="ShaderType.cs" />
-    <Compile Include="Texture.cs" />
-    <Compile Include="TextureFilter.cs" />
-    <Compile Include="Time.cs" />
-    <Compile Include="Vector.cs" />
+    <Compile Include="Graphics\Shader.cs" />
+    <Compile Include="Graphics\ShaderPreProcessor.cs" />
+    <Compile Include="Graphics\ShaderSource.cs" />
+    <Compile Include="Graphics\ShaderSourceGroup.cs" />
+    <Compile Include="Graphics\ShaderType.cs" />
+    <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Graphics\TextureFilter.cs" />
+    <Compile Include="Utility\Time.cs" />
+    <Compile Include="Core\Vector.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -107,11 +121,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\DLoader.lua" />
     <None Include="Resources\Unit.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\DeJaVuFontSheet.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

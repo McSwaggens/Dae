@@ -61,33 +61,51 @@ namespace Dae.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DeJaVuFontSheet {
+            get {
+                object obj = ResourceManager.GetObject("DeJaVuFontSheet", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to test = LoadPlugin (&quot;TestPlugin&quot;);
+        ///
+        ///test.HelloWorld();.
+        /// </summary>
+        internal static string DLoader {
+            get {
+                return ResourceManager.GetString("DLoader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to #version 330 core
+        ///
         ///
         ///#vert
         ///
         ///layout (location = 0) in vec2 vertexPosition;
         ///layout (location = 1) in vec2 _uv;
+        ///layout (location = 2) in vec2 position;
+        ///layout (location = 3) in vec2 characterPosition;
+        ///layout (location = 4) in vec3 _foreground;
+        ///layout (location = 5) in vec3 _background;
         ///
-        ///out vec2 uv;
+        ///varying vec2 uv;
+        ///out flat vec2 fontStartLoc;
+        ///out flat vec3 foreground;
+        ///out flat vec3 background;
+        ///uniform vec2 size;
         ///uniform float time;
-        ///
         ///
         ///void main ()
         ///{
         ///	uv = _uv;
-        ///	gl_Position = vec4(vertexPosition, 0, 1);
-        ///
-        ///}
-        ///
-        ///#frag
-        ///
-        ///in vec2 uv;
-        ///out vec4 color;
-        ///
-        ///void main ()
-        ///{
-        ///	color = texture2D(tex, uv);
-        ///}.
+        ///	foreground = _foreground;
+        ///	background = _ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Unit {
             get {
