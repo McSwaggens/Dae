@@ -119,7 +119,8 @@ namespace Dae
 			while (IsRunning)
 			{
 				canvas.buffer.Blank ();
-				canvas.buffer.Write ("Hello", Color3.white, Color3.black, ( (int)Time.now ) % 2 == 0 ? IVector.zero : IVector.one);
+				canvas.buffer.DrawFrame (Color3.red);
+				canvas.buffer.Write ("Hello", Color3.white, Color3.black, IVector.one);
 
 				Time.Update ();
 

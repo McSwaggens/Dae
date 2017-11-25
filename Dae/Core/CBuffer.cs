@@ -87,6 +87,24 @@ namespace Dae
 			Resize (Size);
 		}
 
+		public void Set ( IVector v, char c )
+		{
+			grid[v.x, v.y].Character = c;
+		}
+
+		public void Set ( IVector v, char c, Color3 backgroundColor )
+		{
+			grid[v.x, v.y].Character = c;
+			grid[v.x, v.y].backgroundColor = backgroundColor;
+		}
+
+		public void Set ( IVector v, char c, Color3 backgroundColor, Color3 foregroundColor )
+		{
+			grid[v.x, v.y].Character = c;
+			grid[v.x, v.y].backgroundColor = backgroundColor;
+			grid[v.x, v.y].foregroundColor = foregroundColor;
+		}
+
 		/// <summary>
 		/// Quick method that reallocates the buffer that has the effect of clearing everything to black
 		/// </summary>
@@ -158,6 +176,43 @@ namespace Dae
 		public void DrawRectangle ( IVector start, IVector end, Color3 backgroundColor )
 		{
 			DrawRectangleTo (start, start + end, backgroundColor);
+		}
+
+		public void DrawFrame ( Color3 backgroundColor, char c = ' ' )
+		{
+			DrawHollowRectangleTo (IVector.zero, Size, backgroundColor, c);
+		}
+
+		public void DrawHollowRectangle ( IVector start, IVector size, Color3 backgroundColor, char c = ' ' )
+		{
+			DrawHollowRectangleTo (start, start + size, backgroundColor, c);
+		}
+
+		public void DrawHollowRectangleTo ( IVector start, IVector end, Color3 backgroundColor, char c = ' ' )
+		{
+			// Top
+			for (IVector v = start; v.x < end.x; v.x++)
+			{
+				Set (v, c, backgroundColor);
+			}
+
+			// Bottom
+			for (IVector v = new IVector (start.x, end.y - 1); v.x < end.x; v.x++)
+			{
+				Set (v, c, backgroundColor);
+			}
+
+			// Left
+			for (IVector v = start; v.y < end.y; v.y++)
+			{
+				Set (v, c, backgroundColor);
+			}
+
+			// Right
+			for (IVector v = new IVector (end.x - 1, start.y); v.y < end.y; v.y++)
+			{
+				Set (v, c, backgroundColor);
+			}
 		}
 	}
 }
