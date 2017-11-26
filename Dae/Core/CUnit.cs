@@ -31,7 +31,7 @@ namespace Dae
 		public CUnit ( char character, Color3 backgroundColor, Color3 foregroundColor )
 		{
 			this.character = character;
-			this.ascii = ascii = Convert.ToByte (character);
+			this.ascii = Convert.ToByte (character);
 
 			this.backgroundColor = backgroundColor;
 			this.foregroundColor = foregroundColor;
