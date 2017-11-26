@@ -12,9 +12,8 @@ namespace Dae.Plugin
 			return true; // Ran successfully
 		}
 
-		public override bool Unload ()
+		public override void Unload ()
 		{
-			throw new NotImplementedException ();
 		}
 
 		public void HelloWorld ()

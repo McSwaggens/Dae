@@ -80,18 +80,7 @@ namespace Dae.Scripting
 		{
 			public static DPlugin LoadPlugin ( string pluginName )
 			{
-				Type pluginType = PluginSystem.FindPlugin (pluginName);
-
-				DPlugin pluginInstance = (DPlugin)Activator.CreateInstance (pluginType);
-
-				DPluginInformation pluginInformation = PluginSystem.GetPluginInformation (pluginType);
-
-				pluginInstance.information = pluginInformation;
-
-				if (pluginInstance != null)
-				{
-					PluginSystem.ActivatePlugin (pluginInstance);
-				}
+				DPlugin pluginInstance = PluginSystem.LoadPlugin (pluginName);
 
 				return pluginInstance;
 			}

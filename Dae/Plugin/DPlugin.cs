@@ -11,9 +11,8 @@ namespace Dae.Plugin
 			throw new NotImplementedException ();
 		}
 
-		public virtual bool Unload ()
+		public virtual void Unload ()
 		{
-			throw new NotImplementedException ();
 		}
 	}
 }

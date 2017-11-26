@@ -32,6 +32,11 @@ namespace Dae.Plugin
 			}
 		}
 
+		/// <summary>
+		/// Finds the plugin type with a given name
+		/// </summary>
+		/// <param name="name">Desired plugin name</param>
+		/// <returns>Plugin type, null if it wasn't found</returns>
 		internal static Type FindPlugin ( string name )
 		{
 			foreach (KeyValuePair<Type, DPluginInformation> pluginPair in discoveredPlugins)
@@ -50,24 +55,55 @@ namespace Dae.Plugin
 			return discoveredPlugins[pluginType];
 		}
 
-		internal static void ActivatePlugin ( DPlugin plugin )
-		{
-			if (!activePlugins.Contains (plugin))
-			{
-				activePlugins.Add (plugin);
-				plugin.Load ();
-
-				Logger.Log ($"Activated plugin: {plugin.information.name}");
-			}
-		}
-
-		internal static void DeActivatePlugin ( DPlugin plugin )
+		internal static void UnloadPlugin ( DPlugin plugin )
 		{
 			if (activePlugins.Contains (plugin))
 			{
 				activePlugins.Remove (plugin);
-				plugin.Unload ();
 			}
+
+			plugin.Unload ();
+		}
+
+		internal static DPlugin LoadPlugin ( string pluginName )
+		{
+			Logger.Log ($"Attempting to load plugin: {pluginName}");
+
+			// Get the plugin type by name
+			Type pluginType = FindPlugin (pluginName);
+
+			// Create an instance of the plugin
+			DPlugin plugin = (DPlugin)Activator.CreateInstance (pluginType);
+
+			// Get the plugin information
+			DPluginInformation pluginInformation = GetPluginInformation (pluginType);
+
+			// Assign the information to the plugin object
+			plugin.information = pluginInformation;
+
+			// Call the plugins load function
+			bool loadedSuccessfully = false;
+
+			try
+			{
+				loadedSuccessfully = plugin.Load ();
+			}
+			catch (Exception)
+			{
+				loadedSuccessfully = false;
+			}
+
+			if (loadedSuccessfully)
+			{
+				activePlugins.Add (plugin);
+				Logger.Log ($"Activated plugin: {plugin.information.name}");
+			}
+			else
+			{
+				Logger.Warning ($"Unable to load plugin: {plugin.information.name}");
+			}
+
+			return plugin;
 		}
 	}
 }
