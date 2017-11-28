@@ -6,12 +6,16 @@ namespace Dae.Plugin
 {
 	internal static class PluginSystem
 	{
-		internal static Dictionary<Type, DPluginInformation> discoveredPlugins = new Dictionary<Type, DPluginInformation> ();
+		internal static List<DPluginDefinition> definitions = new List<DPluginDefinition> ();
 		internal static List<DPlugin> activePlugins = new List<DPlugin> ();
 
 		internal static void LoadPluginsFromAssembly ( Assembly assembly )
 		{
 			Type[] typesFromAsm = assembly.GetTypes ();
+
+			DPluginDefinition definition = null;
+
+			bool foundPlugin = false;
 
 			foreach (Type type in typesFromAsm)
 			{
@@ -24,11 +28,41 @@ namespace Dae.Plugin
 					{
 						// Valid DAE Plugin!
 
-						discoveredPlugins.Add (type, pluginInformation);
+						foundPlugin = true;
+
+						definition = new DPluginDefinition (pluginInformation, type);
 
 						Logger.Log ($"Loaded plugin from assembly '{assembly.FullName}':\n\tName: {pluginInformation.name}\n\tAuthor: {pluginInformation.author}\n\tDescription: {pluginInformation.description}");
+
+						break;
 					}
 				}
+			}
+
+			if (foundPlugin && definition != null)
+			{
+				foreach (Type type in typesFromAsm)
+				{
+					Attribute attribute = type.GetCustomAttribute (typeof (DCustomComponent), true);
+
+					if (attribute != null)
+					{
+						DCustomComponent customComponent = (DCustomComponent)attribute;
+						if (type.IsSubclassOf (typeof (Component)))
+						{
+							DCustomComponentDefinition componentDefinition = new DCustomComponentDefinition (customComponent, type);
+
+							definition.customComponents.Add (componentDefinition);
+
+							Logger.Log ($"Loaded custom component from assembly '{assembly.FullName}':\n\tActual Name: {customComponent.name}\n\tUsable Name: {definition.information.name}.{customComponent.name}");
+						}
+					}
+				}
+			}
+
+			if (definition != null)
+			{
+				definitions.Add (definition);
 			}
 		}
 
@@ -37,22 +71,17 @@ namespace Dae.Plugin
 		/// </summary>
 		/// <param name="name">Desired plugin name</param>
 		/// <returns>Plugin type, null if it wasn't found</returns>
-		internal static Type FindPlugin ( string name )
+		internal static DPluginDefinition FindPlugin ( string name )
 		{
-			foreach (KeyValuePair<Type, DPluginInformation> pluginPair in discoveredPlugins)
+			foreach (DPluginDefinition definition in definitions)
 			{
-				if (pluginPair.Value.name == name)
+				if (definition.information.name == name)
 				{
-					return pluginPair.Key;
+					return definition;
 				}
 			}
 
 			return null;
-		}
-
-		internal static DPluginInformation GetPluginInformation ( Type pluginType )
-		{
-			return discoveredPlugins[pluginType];
 		}
 
 		internal static void UnloadPlugin ( DPlugin plugin )
@@ -70,16 +99,13 @@ namespace Dae.Plugin
 			Logger.Log ($"Attempting to load plugin: {pluginName}");
 
 			// Get the plugin type by name
-			Type pluginType = FindPlugin (pluginName);
+			DPluginDefinition pluginDefinition = FindPlugin (pluginName);
 
 			// Create an instance of the plugin
-			DPlugin plugin = (DPlugin)Activator.CreateInstance (pluginType);
-
-			// Get the plugin information
-			DPluginInformation pluginInformation = GetPluginInformation (pluginType);
+			DPlugin plugin = (DPlugin)Activator.CreateInstance (pluginDefinition.plugin);
 
 			// Assign the information to the plugin object
-			plugin.information = pluginInformation;
+			plugin.information = pluginDefinition.information;
 
 			// Call the plugins load function
 			bool loadedSuccessfully = false;

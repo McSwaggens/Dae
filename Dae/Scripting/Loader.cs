@@ -52,9 +52,9 @@ namespace Dae.Scripting
 
 			luaScript = new Script (CoreModules.Basic | CoreModules.Math | CoreModules.OS_Time);
 
-			foreach (KeyValuePair<Type, DPluginInformation> pair in PluginSystem.discoveredPlugins)
+			foreach (DPluginDefinition definition in PluginSystem.definitions)
 			{
-				UserData.RegisterType (pair.Key);
+				UserData.RegisterType (definition.plugin);
 			}
 
 			luaScript.Globals[nameof (ScriptInterface.LoadPlugin)] = (Func<string, DPlugin>)ScriptInterface.LoadPlugin;

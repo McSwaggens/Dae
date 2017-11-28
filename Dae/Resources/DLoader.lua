@@ -12,6 +12,7 @@
 --	args
 --	inputFile
 --	plugins
+--	rootCanvas
 
 -- Built in functions are as follows:
 --	LoadPlugin (pluginName)
