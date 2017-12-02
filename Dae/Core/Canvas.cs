@@ -12,9 +12,8 @@ namespace Dae
 			this.buffer = buffer;
 		}
 
-		public Canvas ( IVector size )
+		public Canvas ( IVector size ) : base (size)
 		{
-			this.buffer = new CBuffer (size);
 		}
 
 		public override void Render ()
@@ -36,9 +35,19 @@ namespace Dae
 			// Render all sub components
 			foreach (Component component in subComponents)
 			{
-				component.Render ();
-				CBuffer.Blit (component.buffer, buffer, Vector.zero, component.Size, component.position);
+				if (component.Size.x > 0 && component.Size.y > 0)
+				{
+					component.Render ();
+					CBuffer.Blit (component.buffer, buffer, Vector.zero, component.Size, component.position);
+				}
 			}
+		}
+
+		public override void ChangeSize ( IVector newSize )
+		{
+			base.ChangeSize (newSize);
+
+			subComponents.ForEach (c => c.OnParentSizeChanged (newSize));
 		}
 	}
 }

@@ -104,7 +104,7 @@ namespace Dae
 		{
 			GL.EnableVertexAttribArray (attribute);
 			GL.BindBuffer (BufferTarget.ArrayBuffer, bufferId);
-			GL.VertexAttribPointer (attribute, Color3.elements, VertexAttribPointerType.Float, false, 0, 0);
+			GL.VertexAttribPointer (attribute, Color.elements, VertexAttribPointerType.Float, false, 0, 0);
 
 			GL.VertexAttribDivisor (attribute, (int)usage);
 		}

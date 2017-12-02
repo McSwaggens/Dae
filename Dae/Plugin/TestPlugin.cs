@@ -5,10 +5,20 @@ namespace Dae.Plugin
 	[DCustomComponent (name = "Button")]
 	internal class Button : Component
 	{
+		public Button ( IVector size ) : base (size)
+		{
+		}
+
+		public override void OnParentSizeChanged ( IVector parentNewSize )
+		{
+			ChangeSize (parentNewSize.Quarter);
+		}
+
 		public override void Render ()
 		{
-			buffer.Clear (Color3.white);
-			buffer.Write ("Click Me!", Color3.black, Color3.white, new IVector (1, Size.y / 2));
+			buffer.Blank ();
+			buffer.DrawFrame (Color.red);
+			buffer.Write ("Hello", Color.white, Color.black, IVector.one);
 		}
 	}
 

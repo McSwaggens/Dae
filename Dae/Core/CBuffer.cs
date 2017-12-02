@@ -92,13 +92,13 @@ namespace Dae
 			grid[v.x, v.y].Character = c;
 		}
 
-		public void Set ( IVector v, char c, Color3 backgroundColor )
+		public void Set ( IVector v, char c, Color backgroundColor )
 		{
 			grid[v.x, v.y].Character = c;
 			grid[v.x, v.y].backgroundColor = backgroundColor;
 		}
 
-		public void Set ( IVector v, char c, Color3 backgroundColor, Color3 foregroundColor )
+		public void Set ( IVector v, char c, Color backgroundColor, Color foregroundColor )
 		{
 			grid[v.x, v.y].Character = c;
 			grid[v.x, v.y].backgroundColor = backgroundColor;
@@ -113,7 +113,7 @@ namespace Dae
 			grid = new CUnit[Size.x, Size.y];
 		}
 
-		public void Write ( string str, Color3 foreground, Color3 background, IVector location )
+		public void Write ( string str, Color foreground, Color background, IVector location )
 		{
 			for (int i = 0; i < str.Length; i++)
 			{
@@ -130,7 +130,7 @@ namespace Dae
 			}
 		}
 
-		public void Clear ( Color3 color )
+		public void Clear ( Color color )
 		{
 			for (int x = 0; x < Size.x; x++)
 			{
@@ -142,7 +142,7 @@ namespace Dae
 			}
 		}
 
-		public void DrawRectangleTo ( IVector start, IVector end, Color3 foregroundColor, Color3 backgroundColor, char fillCharacter = ' ' )
+		public void DrawRectangleTo ( IVector start, IVector end, Color foregroundColor, Color backgroundColor, char fillCharacter = ' ' )
 		{
 			for (int x = start.x; x < end.x && x < Size.x; x++)
 			{
@@ -155,7 +155,7 @@ namespace Dae
 			}
 		}
 
-		public void DrawRectangleTo ( IVector start, IVector end, Color3 backgroundColor )
+		public void DrawRectangleTo ( IVector start, IVector end, Color backgroundColor )
 		{
 			for (int x = start.x; x < end.x && x < Size.x; x++)
 			{
@@ -163,32 +163,32 @@ namespace Dae
 				{
 					grid[x, y].Character = ' ';
 					grid[x, y].backgroundColor = backgroundColor;
-					grid[x, y].foregroundColor = Color3.white;
+					grid[x, y].foregroundColor = Color.white;
 				}
 			}
 		}
 
-		public void DrawRectangle ( IVector start, IVector end, Color3 foregroundColor, Color3 backgroundColor, char fillCharacter = ' ' )
+		public void DrawRectangle ( IVector start, IVector end, Color foregroundColor, Color backgroundColor, char fillCharacter = ' ' )
 		{
 			DrawRectangleTo (start, start + end, foregroundColor, backgroundColor, fillCharacter);
 		}
 
-		public void DrawRectangle ( IVector start, IVector end, Color3 backgroundColor )
+		public void DrawRectangle ( IVector start, IVector end, Color backgroundColor )
 		{
 			DrawRectangleTo (start, start + end, backgroundColor);
 		}
 
-		public void DrawFrame ( Color3 backgroundColor, char c = ' ' )
+		public void DrawFrame ( Color backgroundColor, char c = ' ' )
 		{
 			DrawHollowRectangleTo (IVector.zero, Size, backgroundColor, c);
 		}
 
-		public void DrawHollowRectangle ( IVector start, IVector size, Color3 backgroundColor, char c = ' ' )
+		public void DrawHollowRectangle ( IVector start, IVector size, Color backgroundColor, char c = ' ' )
 		{
 			DrawHollowRectangleTo (start, start + size, backgroundColor, c);
 		}
 
-		public void DrawHollowRectangleTo ( IVector start, IVector end, Color3 backgroundColor, char c = ' ' )
+		public void DrawHollowRectangleTo ( IVector start, IVector end, Color backgroundColor, char c = ' ' )
 		{
 			// Top
 			for (IVector v = start; v.x < end.x; v.x++)

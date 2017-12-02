@@ -46,6 +46,15 @@ namespace Dae
 			}
 		}
 
+		public IVector Percentage ( int percent )
+		{
+			return ( percent / 100 ) * this;
+		}
+
+		public IVector Half => this / 2;
+		public IVector Quarter => this / 4;
+		public IVector Eith => this / 8;
+
 		public static int Dot ( IVector a, IVector b )
 		{
 			return ( a.x * b.x ) + ( a.y * b.y );
@@ -60,12 +69,12 @@ namespace Dae
 
 		public static bool operator == ( IVector a, IVector b )
 		{
-			return a.x == b.x && a.y == b.y;
+			return a.x == b.x || a.y == b.y;
 		}
 
 		public static bool operator != ( IVector a, IVector b )
 		{
-			return a.x != b.x && a.y != b.y;
+			return a.x != b.x || a.y != b.y;
 		}
 
 		public static IVector operator + ( IVector a, IVector b )

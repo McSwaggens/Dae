@@ -25,10 +25,10 @@ namespace Dae
 			}
 		}
 
-		public Color3 backgroundColor;
-		public Color3 foregroundColor;
+		public Color backgroundColor;
+		public Color foregroundColor;
 
-		public CUnit ( char character, Color3 backgroundColor, Color3 foregroundColor )
+		public CUnit ( char character, Color backgroundColor, Color foregroundColor )
 		{
 			this.character = character;
 			this.ascii = Convert.ToByte (character);
@@ -42,8 +42,8 @@ namespace Dae
 			this.character = character;
 			this.ascii = Convert.ToByte (character);
 
-			backgroundColor = Color3.black;
-			foregroundColor = Color3.white;
+			backgroundColor = Color.black;
+			foregroundColor = Color.white;
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace Dae
 		/// <param name="Background Color"></param>
 		/// <param name="Foreground Color"></param>
 		/// <returns>Array of units</returns>
-		public static CUnit[] ToCUnitArray ( string str, Color3 backgroundColor, Color3 foregroundColor )
+		public static CUnit[] ToCUnitArray ( string str, Color backgroundColor, Color foregroundColor )
 		{
 			CUnit[] units = new CUnit[str.Length];
 

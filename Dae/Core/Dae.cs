@@ -41,9 +41,9 @@ namespace Dae
 		private static RootCanvas rootCanvas;
 		public static RootCanvas RootCanvas => rootCanvas;
 
-		public static Vector GetUnitSize ( IVector size ) => ( 1f / (Vector)( size ) );
+		private static Vector GetUnitSize ( IVector size ) => ( 1f / (Vector)( size ) );
 
-		public static Vector unitScale = new Vector (1.2f, 1.1f);
+		private static Vector unitScale = new Vector (1.2f, 1.1f);
 
 		internal static readonly IVector hdScale = new IVector (100, 40);
 
@@ -65,12 +65,33 @@ namespace Dae
 			rootCanvas = new RootCanvas (rootBuffer, RenderTarget.defaultRenderTarget);
 
 			DWindow window = new DWindow ();
+			window.ProcessEvents ();
+			window.RenderFrameToScreen ();
 
 			// Initialize the static Graphics class
 			Graphics.Initialize ();
 
+			// Clear out the screen (make sure it's not white when we start up the window) (Burns my eyes)
+			GL.ClearColor (0, 0, 0, 1);
+			GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			window.Title = "LOADING ...";
+
+			window.RenderFrameToScreen ();
+
 			// Initialize PluginSystem
 			PluginSystem.LoadPluginsFromAssembly (Assembly.GetExecutingAssembly ());
+
+			PluginSystem.LoadDllsFromPath (Util.CurrentPath + "Plugins/");
+
+			Loader.PrepareScript ();
+			Loader.Run ();
+
+			Button button = new Button (new IVector (30, 20));
+			rootCanvas.AddComponent (button);
+			button.position = 4;
+
+			window.Title = "Dae";
 
 			// Enter the main loop
 			Run ();
@@ -107,30 +128,16 @@ namespace Dae
 				renderCount = 0;
 			}).Start (1f);
 
-			Canvas canvas = new Canvas (10);
-			canvas.position = 2;
-
-			rootCanvas.AddComponent (canvas);
-
-			PluginSystem.LoadDllsFromPath (Util.CurrentPath + "Plugins/");
-
-			Loader.PrepareScript ();
-			Loader.Run ();
-
 			// Loop while DAE is supposed to be running
 			while (IsRunning)
 			{
-				canvas.buffer.Blank ();
-				canvas.buffer.DrawFrame (Color3.red);
-				canvas.buffer.Write ("Hello", Color3.white, Color3.black, IVector.one);
-
 				Time.Update ();
 
 				CheckWindowInput ();
 
 				Scheduler.allSchedulers.actual.ForEach (sch => sch.Update ());
 
-				rootBuffer.Clear (Color3.black);
+				rootBuffer.Clear (Color.black);
 
 				double renderTime = Performance.Analize (() => Render ());
 
@@ -224,8 +231,8 @@ namespace Dae
 
 		internal static Vector[] cachedUnitScreenPositions;
 		internal static Vector[] cachedUnitFontPositions;
-		internal static Color3[] cachedUnitForegroundColors;
-		internal static Color3[] cachedUnitBackgroundColors;
+		internal static Color[] cachedUnitForegroundColors;
+		internal static Color[] cachedUnitBackgroundColors;
 
 		internal static void AlertWindowResized ( DWindow window )
 		{
@@ -237,12 +244,21 @@ namespace Dae
 			cachedUnitSize = GetUnitSize (gridSize);
 			cachedUnitScreenPositions = new Vector[gridSize.y * gridSize.x];
 			cachedUnitFontPositions = new Vector[gridSize.y * gridSize.x];
-			cachedUnitForegroundColors = new Color3[gridSize.y * gridSize.x];
-			cachedUnitBackgroundColors = new Color3[gridSize.y * gridSize.x];
+			cachedUnitForegroundColors = new Color[gridSize.y * gridSize.x];
+			cachedUnitBackgroundColors = new Color[gridSize.y * gridSize.x];
+
+			IVector oldSize = rootCanvas.Size;
+
+			bool rootCanvasSizeChanged = gridSize != oldSize;
 
 			CBuffer oldBuffer = rootBuffer;
-			rootBuffer = new CBuffer (gridSize);
-			rootCanvas.buffer = rootBuffer;
+			rootCanvas.ChangeSize (gridSize);
+			rootBuffer = rootCanvas.buffer;
+
+			if (rootCanvasSizeChanged)
+			{
+				window.Title = $"Dae | Size: {gridSize.x}x{gridSize.y}";
+			}
 
 			unitMaterial?.Set ("size", GetUnitSize (gridSize) * unitScale);
 

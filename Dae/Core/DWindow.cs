@@ -54,7 +54,7 @@ namespace Dae
 
 			window.Closing += TkGameWindow_Closing;
 			window.Resize += OnResized;
-			window.VSync = VSyncMode.Off;
+			window.VSync = VSyncMode.On;
 			SetWindowMode (WindowMode.Windowed);
 
 			Dae.AlertWindowCreated (this);

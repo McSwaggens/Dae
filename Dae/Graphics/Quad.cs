@@ -6,7 +6,7 @@ namespace Dae
 	{
 		public static GLABuffer<Vector> vertexBuffer, uvBuffer, positionBuffer, fontPositionBuffer;
 
-		public static GLABuffer<Color3> foregroundBuffer, backgroundBuffer;
+		public static GLABuffer<Color> foregroundBuffer, backgroundBuffer;
 
 		internal static void Initialize ()
 		{
@@ -33,8 +33,8 @@ namespace Dae
 			uvBuffer = new GLABuffer<Vector> (4, 1, uvBufferArray, GLABufferUsage.PerVertex);
 			positionBuffer = new GLABuffer<Vector> (0, 2, null, GLABufferUsage.PerDraw);
 			fontPositionBuffer = new GLABuffer<Vector> (0, 3, null, GLABufferUsage.PerDraw);
-			foregroundBuffer = new GLABuffer<Color3> (0, 4, null, GLABufferUsage.PerDraw);
-			backgroundBuffer = new GLABuffer<Color3> (0, 5, null, GLABufferUsage.PerDraw);
+			foregroundBuffer = new GLABuffer<Color> (0, 4, null, GLABufferUsage.PerDraw);
+			backgroundBuffer = new GLABuffer<Color> (0, 5, null, GLABufferUsage.PerDraw);
 		}
 
 		public static void Enable ()
@@ -55,7 +55,7 @@ namespace Dae
 		public static void Dispose ()
 		{
 			GLABuffer<Vector>.Delete (vertexBuffer, uvBuffer, positionBuffer, fontPositionBuffer);
-			GLABuffer<Color3>.Delete (foregroundBuffer, backgroundBuffer);
+			GLABuffer<Color>.Delete (foregroundBuffer, backgroundBuffer);
 		}
 
 		public static void Render ()
@@ -63,7 +63,7 @@ namespace Dae
 			GL.DrawArraysInstanced (PrimitiveType.TriangleFan, 0, 4, positionBuffer.Size);
 		}
 
-		public static void Render ( Vector[] unitPositions, Vector[] fontPositions, Color3[] foregroundColors, Color3[] backgroundColors )
+		public static void Render ( Vector[] unitPositions, Vector[] fontPositions, Color[] foregroundColors, Color[] backgroundColors )
 		{
 			positionBuffer.Upload (unitPositions);
 			fontPositionBuffer.Upload (fontPositions);
