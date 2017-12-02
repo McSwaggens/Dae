@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dae", "Dae\Dae.csproj", "{3BA83066-4EE1-435B-850A-BAE4ED447EE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandBar", "CommandBar\CommandBar.csproj", "{55C82FC6-B3D6-4A5A-88E9-8E844EE49E1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Default Plugins", "Default Plugins", "{32748115-A473-41F5-AEF3-840F4540490B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +19,15 @@ Global
 		{3BA83066-4EE1-435B-850A-BAE4ED447EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BA83066-4EE1-435B-850A-BAE4ED447EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BA83066-4EE1-435B-850A-BAE4ED447EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55C82FC6-B3D6-4A5A-88E9-8E844EE49E1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55C82FC6-B3D6-4A5A-88E9-8E844EE49E1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55C82FC6-B3D6-4A5A-88E9-8E844EE49E1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55C82FC6-B3D6-4A5A-88E9-8E844EE49E1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{55C82FC6-B3D6-4A5A-88E9-8E844EE49E1E} = {32748115-A473-41F5-AEF3-840F4540490B}
 	EndGlobalSection
 EndGlobal

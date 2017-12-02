@@ -112,6 +112,8 @@ namespace Dae
 
 			rootCanvas.AddComponent (canvas);
 
+			PluginSystem.LoadDllsFromPath (Util.CurrentPath + "Plugins/");
+
 			Loader.PrepareScript ();
 			Loader.Run ();
 

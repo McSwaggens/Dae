@@ -22,7 +22,7 @@ namespace Dae
 		}
 
 		public static string DocumentsDirectory => HomeDirectory + "Documents/";
-		public static string CurrentPath => "./";
+		public static string CurrentPath => Environment.CurrentDirectory + "/";
 		public static string PluginsDirectory => CurrentPath + "Plugins";
 	}
 }

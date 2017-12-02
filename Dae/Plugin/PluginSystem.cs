@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace Dae.Plugin
@@ -9,7 +10,7 @@ namespace Dae.Plugin
 		internal static List<DPluginDefinition> definitions = new List<DPluginDefinition> ();
 		internal static List<DPlugin> activePlugins = new List<DPlugin> ();
 
-		internal static void LoadPluginsFromAssembly ( Assembly assembly )
+		internal static bool LoadPluginsFromAssembly ( Assembly assembly )
 		{
 			Type[] typesFromAsm = assembly.GetTypes ();
 
@@ -63,7 +64,11 @@ namespace Dae.Plugin
 			if (definition != null)
 			{
 				definitions.Add (definition);
+
+				return true;
 			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -92,6 +97,22 @@ namespace Dae.Plugin
 			}
 
 			plugin.Unload ();
+		}
+
+		internal static void LoadDllsFromPath ( string path )
+		{
+			string[] files = Directory.GetFiles (path);
+
+			foreach (string file in files)
+			{
+				if (file.EndsWith (".dll"))
+				{
+					Logger.Log ("Found plugin: " + Path.GetFileName (file));
+					Assembly fileAssembly = Assembly.LoadFile (file);
+
+					bool foundPlugin = LoadPluginsFromAssembly (fileAssembly);
+				}
+			}
 		}
 
 		internal static DPlugin LoadPlugin ( string pluginName )
