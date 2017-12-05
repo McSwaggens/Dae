@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Dae.Plugin
 {
 	[AttributeUsage (AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-	internal class DCustomComponent : Attribute
+	public class DCustomComponent : Attribute
 	{
 		public string name;
 	}

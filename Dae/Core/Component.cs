@@ -1,4 +1,5 @@
 ﻿using System;
+using static Dae.Util.PositionAnchor;
 
 namespace Dae
 {
@@ -9,6 +10,16 @@ namespace Dae
 		public IVector position;
 		public IVector Size => buffer.Size;
 		public CBuffer buffer;
+		public Canvas parent;
+		internal bool signalRender = true;
+		internal bool receiveTicks = true;
+
+		// Virtual because it might be the root canvas (doesn't have a parent)
+		public virtual void SignalRender ()
+		{
+			signalRender = true;
+			parent?.SignalRender ();
+		}
 
 		public Component ()
 		{
@@ -23,9 +34,16 @@ namespace Dae
 		{
 			buffer.Resize (newSize);
 			OnSizeChanged (newSize);
+			SignalRender ();
 		}
 
-		public virtual void OnParentSizeChanged ( IVector parentNewSize )
+		public void SetPosition ( IVector desiredPosition, AnchorX xAnchor, AnchorY yAnchor ) => position = AnchorComponent (this, desiredPosition, xAnchor, yAnchor);
+
+		public virtual void OnParentSizeChanged ( Canvas parent, IVector parentNewSize )
+		{
+		}
+
+		public virtual void Tick ()
 		{
 		}
 

@@ -11,7 +11,7 @@ namespace Dae.Scripting
 	{
 		public static string scriptPath = "";
 
-		public static readonly bool replaceAlways = true;
+		public static readonly bool replaceAlways = false;
 
 		private static Script luaScript;
 
@@ -57,7 +57,13 @@ namespace Dae.Scripting
 				UserData.RegisterType (definition.plugin);
 			}
 
+			UserData.RegisterType (typeof (Canvas));
+			UserData.RegisterType (typeof (Component));
+
 			luaScript.Globals[nameof (ScriptInterface.LoadPlugin)] = (Func<string, DPlugin>)ScriptInterface.LoadPlugin;
+			luaScript.Globals[nameof (ScriptInterface.CreateComponent)] = (Func<string, Component>)ScriptInterface.CreateComponent;
+
+			luaScript.Globals["rootCanvas"] = Dae.RootCanvas;
 		}
 
 		internal static void Run ()
@@ -78,6 +84,18 @@ namespace Dae.Scripting
 		[MoonSharpUserData]
 		private static class ScriptInterface
 		{
+			public static Component CreateComponent ( string componentName )
+			{
+				DCustomComponentDefinition definition = PluginSystem.FindComponentDefinition (componentName);
+				if (definition == null)
+				{
+					return null;
+				}
+
+				Component componentInstance = (Component)Activator.CreateInstance (definition.type);
+				return componentInstance;
+			}
+
 			public static DPlugin LoadPlugin ( string pluginName )
 			{
 				DPlugin pluginInstance = PluginSystem.LoadPlugin (pluginName);

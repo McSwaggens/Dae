@@ -113,15 +113,20 @@ namespace Dae
 			grid = new CUnit[Size.x, Size.y];
 		}
 
-		public void Write ( string str, Color foreground, Color background, IVector location )
+		public void Write ( string str, Color foreground, Color background, IVector location, bool center = false )
 		{
+			if (center)
+			{
+				location.x -= ( str.Length / 2 );
+			}
+
 			for (int i = 0; i < str.Length; i++)
 			{
 				char c = str[i];
 
 				int x = location.x + i;
 
-				if (x >= Size.x || location.y >= Size.y)
+				if (x < 0 || x >= Size.x || location.y >= Size.y)
 					break;
 
 				grid[x, location.y].SetCharacter (c);

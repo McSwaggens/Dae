@@ -1,4 +1,5 @@
 ﻿using System;
+using static Dae.Util.PositionAnchor;
 
 namespace Dae.Plugin
 {
@@ -9,16 +10,19 @@ namespace Dae.Plugin
 		{
 		}
 
-		public override void OnParentSizeChanged ( IVector parentNewSize )
+		public override void OnParentSizeChanged ( Canvas parent, IVector parentNewSize )
 		{
 			ChangeSize (parentNewSize.Quarter);
+			SetPosition (parent.Size / 2, AnchorX.Middle, AnchorY.Middle);
 		}
 
 		public override void Render ()
 		{
 			buffer.Blank ();
-			buffer.DrawFrame (Color.red);
-			buffer.Write ("Hello", Color.white, Color.black, IVector.one);
+			string str = "Size: " + Size;
+			IVector s = AnchorSize (new IVector (str.Length, 1), Size, AnchorX.Middle, AnchorY.Bottom);
+			buffer.DrawFrame (Color.red, 'i');
+			buffer.Write (str, Color.white, Color.black, s);
 		}
 	}
 

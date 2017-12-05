@@ -4,6 +4,8 @@ using Dae.Scripting;
 using OpenTK.Graphics.OpenGL4;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using static Dae.Util.PositionAnchor;
 
 namespace Dae
 {
@@ -53,6 +55,8 @@ namespace Dae
 
 		private static List<DWindow> windows = new List<DWindow> ();
 
+		private static Thread logicTickThread;
+
 		internal static void AlertWindowCreated ( DWindow window )
 		{
 			windows.Add (window);
@@ -91,13 +95,41 @@ namespace Dae
 			rootCanvas.AddComponent (button);
 			button.position = 4;
 
+			Time.OnSecond += OnSecond;
+
 			window.Title = "Dae";
+
+			IsRunning = true;
+
+			logicTickThread = new Thread (TickLoop);
+			logicTickThread.Start ();
 
 			// Enter the main loop
 			Run ();
 
 			// Actually shutdown/free DAE from the system (GPU, Hooks & Memory)
 			Shutdown ();
+		}
+
+		private static void TickLoop ()
+		{
+			while (IsRunning)
+			{
+				rootCanvas.Tick ();
+				Thread.Sleep (10);
+			}
+		}
+
+		private static bool signalForceRender = false;
+
+		private static void SignalForceRender ()
+		{
+			signalForceRender = true;
+		}
+
+		private static void OnSecond ()
+		{
+			SignalForceRender ();
 		}
 
 		internal static float averageRenderTime = 0f;
@@ -108,8 +140,6 @@ namespace Dae
 		// Main Loop
 		private static void Run ()
 		{
-			IsRunning = true;
-
 			Initialize ();
 
 			double _largestRenderTime = 0D;
@@ -213,7 +243,15 @@ namespace Dae
 		{
 			GL.ClearColor (0.30f, 0.30f, 0.30f, 1);
 
-			rootCanvas.Render ();
+			if (signalForceRender)
+			{
+				rootCanvas.ForceRenderAll ();
+				signalForceRender = false;
+			}
+			else
+			{
+				rootCanvas.Render ();
+			}
 
 			unitMaterial.Enable ();
 
@@ -254,6 +292,8 @@ namespace Dae
 			CBuffer oldBuffer = rootBuffer;
 			rootCanvas.ChangeSize (gridSize);
 			rootBuffer = rootCanvas.buffer;
+
+			rootCanvas.SignalRender ();
 
 			if (rootCanvasSizeChanged)
 			{

@@ -33,8 +33,16 @@
 			}
 		}
 
-		private void RenderBufferToRenderTarget ()
+		public void ForceRenderAll ()
 		{
+			checkSignalRender = false;
+			Render ();
+			checkSignalRender = true;
+		}
+
+		public override void SignalRender ()
+		{
+			signalRender = true;
 		}
 	}
 }

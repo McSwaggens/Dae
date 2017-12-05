@@ -89,6 +89,20 @@ namespace Dae.Plugin
 			return null;
 		}
 
+		internal static DCustomComponentDefinition FindComponentDefinition ( string fullName )
+		{
+			foreach (DPluginDefinition definition in definitions)
+			{
+				DCustomComponentDefinition cdef = definition.customComponents.Find (c => fullName == $"{definition.information.name}.{c.information.name}");
+				if (cdef != null)
+				{
+					return cdef;
+				}
+			}
+
+			return null;
+		}
+
 		internal static void UnloadPlugin ( DPlugin plugin )
 		{
 			if (activePlugins.Contains (plugin))
