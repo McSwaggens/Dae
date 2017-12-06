@@ -5,7 +5,6 @@ using OpenTK.Graphics.OpenGL4;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using static Dae.Util.PositionAnchor;
 
 namespace Dae
 {
@@ -111,6 +110,12 @@ namespace Dae
 			Shutdown ();
 		}
 
+		public delegate void FrameEvent ();
+
+		public static event FrameEvent OnFrameStart;
+
+		public static event FrameEvent OnFrameEnd;
+
 		private static void TickLoop ()
 		{
 			while (IsRunning)
@@ -132,8 +137,8 @@ namespace Dae
 			SignalForceRender ();
 		}
 
-		internal static float averageRenderTime = 0f;
-		internal static float largestRenderTime = 0f;
+		public static float averageRenderTime = 0f;
+		public static float largestRenderTime = 0f;
 
 		private static Material unitMaterial;
 
@@ -165,6 +170,8 @@ namespace Dae
 
 				CheckWindowInput ();
 
+				OnFrameStart?.Invoke ();
+
 				Scheduler.allSchedulers.actual.ForEach (sch => sch.Update ());
 
 				rootBuffer.Clear (Color.black);
@@ -183,6 +190,8 @@ namespace Dae
 				//Logger.Print ("Rendering took " + ( timer.Elapsed.TotalMilliseconds ) + "ms to complete.");
 
 				Scheduler.allSchedulers.Update ();
+
+				OnFrameEnd?.Invoke ();
 
 				Present ();
 
