@@ -5,6 +5,9 @@ using OpenTK.Graphics.OpenGL4;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using OpenTK.Input;
+using System;
+using OpenTK;
 
 namespace Dae
 {
@@ -55,11 +58,6 @@ namespace Dae
 		private static List<DWindow> windows = new List<DWindow> ();
 
 		private static Thread logicTickThread;
-
-		internal static void AlertWindowCreated ( DWindow window )
-		{
-			windows.Add (window);
-		}
 
 		// Initialize/Start DAE
 		internal static void Start ()
@@ -135,6 +133,34 @@ namespace Dae
 		private static void OnSecond ()
 		{
 			SignalForceRender ();
+		}
+
+		#region Input events from DWindow
+
+		internal static void DWindowOnKeyDown ( object sender, KeyboardKeyEventArgs e )
+		{
+			DKey key = (DKey)e.Key;
+			DModifiers modifiers = new DModifiers (e.Shift, e.Control, e.Alt);
+
+			if (!e.IsRepeat)
+			{
+				rootCanvas.OnKeyPressed (key, modifiers);
+			}
+			rootCanvas.OnKeyDown (key, modifiers);
+		}
+
+		internal static void DWindowOnKeyUp ( object sender, KeyboardKeyEventArgs e )
+		{
+			DKey key = (DKey)e.Key;
+			DModifiers modifiers = new DModifiers (e.Shift, e.Control, e.Alt);
+			rootCanvas.OnKeyUp (key, modifiers);
+		}
+
+		#endregion Input events from DWindow
+
+		internal static void AlertWindowCreated ( DWindow window )
+		{
+			windows.Add (window);
 		}
 
 		public static float averageRenderTime = 0f;

@@ -55,5 +55,17 @@ namespace Dae
 		public virtual void OnSizeChanged ( IVector size )
 		{
 		}
+
+		public virtual void OnKeyDown ( DKey key, DModifiers modifiers )
+		{
+		}
+
+		public virtual void OnKeyUp ( DKey key, DModifiers modifiers )
+		{
+		}
+
+		public virtual void OnKeyPressed ( DKey key, DModifiers modifiers )
+		{
+		}
 	}
 }

@@ -79,5 +79,29 @@ namespace Dae
 
 			subComponents.ForEach (c => c.OnParentSizeChanged (this, newSize));
 		}
+
+		public override void OnKeyDown ( DKey key, DModifiers modifiers )
+		{
+			foreach (Component component in subComponents)
+			{
+				component.OnKeyDown (key, modifiers);
+			}
+		}
+
+		public override void OnKeyPressed ( DKey key, DModifiers modifiers )
+		{
+			foreach (Component component in subComponents)
+			{
+				component.OnKeyPressed (key, modifiers);
+			}
+		}
+
+		public override void OnKeyUp ( DKey key, DModifiers modifiers )
+		{
+			foreach (Component component in subComponents)
+			{
+				component.OnKeyUp (key, modifiers);
+			}
+		}
 	}
 }

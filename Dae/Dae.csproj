@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\DKey.cs" />
+    <Compile Include="Core\DModifiers.cs" />
     <Compile Include="Graphics\ColorPack.cs" />
     <Compile Include="Plugin\DCustomComponent.cs" />
     <Compile Include="Plugin\DCustomComponentDefinition.cs" />

@@ -54,6 +54,8 @@ namespace Dae
 
 			window.Closing += TkGameWindow_Closing;
 			window.Resize += OnResized;
+			window.KeyDown += Dae.DWindowOnKeyDown;
+			window.KeyUp += Dae.DWindowOnKeyUp;
 			window.VSync = VSyncMode.Off;
 			SetWindowMode (WindowMode.Windowed);
 
