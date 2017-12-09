@@ -79,6 +79,7 @@
     <Compile Include="Core\RootCanvas.cs" />
     <Compile Include="Utility\Scheduler.cs" />
     <Compile Include="Scripting\Loader.cs" />
+    <Compile Include="Utility\SwapStack.cs" />
     <Compile Include="Utility\Util.cs" />
     <Compile Include="Utility\Stack.cs" />
     <Compile Include="Utility\StackManager.cs" />

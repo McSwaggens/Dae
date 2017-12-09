@@ -7,7 +7,9 @@ namespace Dae
 		internal static bool checkSignalRender = true;
 
 		// All components found inside of this Canvas
-		public List<Component> subComponents = new List<Component> ();
+		public SwapStack<Component> subComponents = new SwapStack<Component> ();
+
+		public Component FocusedComponent => subComponents[0];
 
 		public Canvas ( CBuffer buffer )
 		{
@@ -22,6 +24,24 @@ namespace Dae
 		{
 			// Render all components found inside of this canvas
 			RenderSubComponents ();
+		}
+
+		public override void ReleaseFocus ()
+		{
+			base.ReleaseFocus ();
+			foreach (Component component in subComponents)
+			{
+				if (component.focused)
+				{
+					component.ReleaseFocus ();
+				}
+			}
+		}
+
+		public override void Focus ()
+		{
+			focused = true;
+			parent?.Focus ();
 		}
 
 		public void AddComponent ( Component component )
@@ -84,7 +104,10 @@ namespace Dae
 		{
 			foreach (Component component in subComponents)
 			{
-				component.OnKeyDown (key, modifiers);
+				if (component.focused)
+				{
+					component.OnKeyDown (key, modifiers);
+				}
 			}
 		}
 
@@ -92,7 +115,10 @@ namespace Dae
 		{
 			foreach (Component component in subComponents)
 			{
-				component.OnKeyPressed (key, modifiers);
+				if (component.focused)
+				{
+					component.OnKeyPressed (key, modifiers);
+				}
 			}
 		}
 
@@ -100,7 +126,41 @@ namespace Dae
 		{
 			foreach (Component component in subComponents)
 			{
-				component.OnKeyUp (key, modifiers);
+				if (component.focused)
+				{
+					component.OnKeyUp (key, modifiers);
+				}
+			}
+		}
+
+		public override void OnMouseMove ( IVector localPosition )
+		{
+			foreach (Component component in subComponents)
+			{
+				if (localPosition >= component.position && localPosition < component.position + component.Size)
+				{
+					IVector newLocalPosition = localPosition - component.position;
+
+					if (!component.mouseInside)
+					{
+						component.OnMouseEnter (newLocalPosition);
+					}
+
+					component.OnMouseMove (newLocalPosition);
+				}
+				else if (component.mouseInside)
+				{
+					component.OnMouseLeave ();
+				}
+			}
+		}
+
+		public override void OnMouseLeave ()
+		{
+			base.OnMouseLeave ();
+			foreach (Component component in subComponents)
+			{
+				component.OnMouseLeave ();
 			}
 		}
 	}

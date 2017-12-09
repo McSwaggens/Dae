@@ -59,6 +59,8 @@ namespace Dae
 			window.VSync = VSyncMode.Off;
 			SetWindowMode (WindowMode.Windowed);
 
+			size = new Vector (Width, Height);
+
 			Dae.AlertWindowCreated (this);
 			Dae.AlertWindowResized (this);
 		}
@@ -109,7 +111,13 @@ namespace Dae
 
 		internal void ProcessEvents ()
 		{
-			window?.ProcessEvents ();
+			if (window != null)
+			{
+				window?.ProcessEvents ();
+
+				IVector mousePosition = new IVector (window.Mouse.X, window.Mouse.Y);
+				Dae.pxMousePosition = mousePosition;
+			}
 		}
 
 		public void RenderFrameToScreen ()

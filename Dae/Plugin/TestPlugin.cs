@@ -12,8 +12,6 @@ namespace Dae.Plugin
 
 		public override void OnParentSizeChanged ( Canvas parent, IVector parentNewSize )
 		{
-			ChangeSize (parentNewSize.Quarter);
-			SetPosition (parent.Size / 2, AnchorX.Middle, AnchorY.Middle);
 		}
 
 		public override void Render ()
@@ -21,8 +19,53 @@ namespace Dae.Plugin
 			buffer.Blank ();
 			string str = "Size: " + Size;
 			IVector s = AnchorSize (new IVector (str.Length, 1), Size, AnchorX.Middle, AnchorY.Bottom);
-			buffer.DrawFrame (Color.red, 'i');
+			buffer.DrawFrame (focused ? Color.blue : Color.red, 'i');
 			buffer.Write (str, Color.white, Color.black, s);
+		}
+
+		public override void OnMouseEnter ( IVector localPosition )
+		{
+			base.OnMouseEnter (localPosition);
+			SignalRender ();
+		}
+
+		public override void OnMouseLeave ()
+		{
+			base.OnMouseLeave ();
+			SignalRender ();
+		}
+	}
+
+	[DCustomComponent (name = "Foo")]
+	internal class Foo : Canvas
+	{
+		public Foo ( IVector size ) : base (size)
+		{
+		}
+
+		public override void OnParentSizeChanged ( Canvas parent, IVector parentNewSize )
+		{
+			ChangeSize (parentNewSize.Half);
+			SetPosition (parent.Size / 2, AnchorX.Middle, AnchorY.Middle);
+		}
+
+		public override void Render ()
+		{
+			buffer.Blank ();
+			base.Render ();
+			buffer.DrawFrame (focused ? Color.blue : Color.red, '|');
+		}
+
+		public override void OnMouseEnter ( IVector localPosition )
+		{
+			base.OnMouseEnter (localPosition);
+			SignalRender ();
+		}
+
+		public override void OnMouseLeave ()
+		{
+			base.OnMouseLeave ();
+			SignalRender ();
 		}
 	}
 

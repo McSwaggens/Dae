@@ -13,13 +13,7 @@ namespace Dae
 		public Canvas parent;
 		internal bool signalRender = true;
 		internal bool receiveTicks = true;
-
-		// Virtual because it might be the root canvas (doesn't have a parent)
-		public virtual void SignalRender ()
-		{
-			signalRender = true;
-			parent?.SignalRender ();
-		}
+		internal bool mouseInside = false;
 
 		public Component ()
 		{
@@ -28,6 +22,33 @@ namespace Dae
 		public Component ( IVector size )
 		{
 			buffer = new CBuffer (size);
+		}
+
+		public virtual void Focus ()
+		{
+			if (!focused)
+			{
+				Dae.RootCanvas.ReleaseFocus ();
+				focused = true;
+				parent.Focus ();
+			}
+		}
+
+		public virtual void ReleaseFocus ()
+		{
+			focused = false;
+			SignalRender ();
+		}
+
+		public virtual void OnFocused ()
+		{
+		}
+
+		// Virtual because it might be the root canvas (doesn't have a parent)
+		public virtual void SignalRender ()
+		{
+			signalRender = true;
+			parent?.SignalRender ();
 		}
 
 		public virtual void ChangeSize ( IVector newSize )
@@ -65,6 +86,25 @@ namespace Dae
 		}
 
 		public virtual void OnKeyPressed ( DKey key, DModifiers modifiers )
+		{
+		}
+
+		public virtual void OnMouseEnter ( IVector localPosition )
+		{
+			mouseInside = true;
+			Focus ();
+		}
+
+		public virtual void OnMouseLeave ()
+		{
+			mouseInside = false;
+			if (focused)
+			{
+				ReleaseFocus ();
+			}
+		}
+
+		public virtual void OnMouseMove ( IVector localPosition )
 		{
 		}
 	}

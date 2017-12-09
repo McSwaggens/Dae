@@ -45,9 +45,11 @@ namespace Dae
 		private static RootCanvas rootCanvas;
 		public static RootCanvas RootCanvas => rootCanvas;
 
+		public static DWindow MainWindow => windows[0];
+
 		private static Vector GetUnitSize ( IVector size ) => ( 1f / (Vector)( size ) );
 
-		private static Vector unitScale = new Vector (1.2f, 1.1f);
+		private static Vector unitScale = new Vector (1.0f, 1.0f);
 
 		internal static readonly IVector hdScale = new IVector (100, 40);
 
@@ -56,6 +58,8 @@ namespace Dae
 		public static IVector gridSize = IVector.one;
 
 		private static List<DWindow> windows = new List<DWindow> ();
+
+		private static Texture fontTexture;
 
 		private static Thread logicTickThread;
 
@@ -80,17 +84,28 @@ namespace Dae
 
 			window.RenderFrameToScreen ();
 
+			window.Title = "LOADING PLUGINS ...";
+
 			// Initialize PluginSystem
 			PluginSystem.LoadPluginsFromAssembly (Assembly.GetExecutingAssembly ());
 
 			PluginSystem.LoadDllsFromPath (Util.CurrentPath + "Plugins/");
 
+			window.Title = "LOADING START-UP SCRIPT...";
+
 			Loader.PrepareScript ();
 			Loader.Run ();
 
-			Button button = new Button (new IVector (30, 20));
-			rootCanvas.AddComponent (button);
-			button.position = 4;
+			Foo foo = new Foo (new IVector (30, 20));
+			rootCanvas.AddComponent (foo);
+
+			Button b1 = new Button (new IVector (15, 5));
+			b1.position += 1;
+			foo.AddComponent (b1);
+
+			Button b2 = new Button (new IVector (15, 5));
+			b2.position = b1.Size + 1;
+			foo.AddComponent (b2);
 
 			Time.OnSecond += OnSecond;
 
@@ -135,7 +150,15 @@ namespace Dae
 			SignalForceRender ();
 		}
 
-		#region Input events from DWindow
+		#region Keyboard input events from DWindow
+
+		public delegate void KeyEvent ( DKey key, DModifiers modifiers );
+
+		public static event KeyEvent OnKeyDown;
+
+		public static event KeyEvent OnKeyUp;
+
+		public static event KeyEvent OnKeyPress;
 
 		internal static void DWindowOnKeyDown ( object sender, KeyboardKeyEventArgs e )
 		{
@@ -145,8 +168,11 @@ namespace Dae
 			if (!e.IsRepeat)
 			{
 				rootCanvas.OnKeyPressed (key, modifiers);
+				OnKeyPress?.Invoke (key, modifiers);
 			}
 			rootCanvas.OnKeyDown (key, modifiers);
+
+			OnKeyDown?.Invoke (key, modifiers);
 		}
 
 		internal static void DWindowOnKeyUp ( object sender, KeyboardKeyEventArgs e )
@@ -154,9 +180,25 @@ namespace Dae
 			DKey key = (DKey)e.Key;
 			DModifiers modifiers = new DModifiers (e.Shift, e.Control, e.Alt);
 			rootCanvas.OnKeyUp (key, modifiers);
+			OnKeyUp?.Invoke (key, modifiers);
 		}
 
-		#endregion Input events from DWindow
+		#endregion Keyboard input events from DWindow
+
+		#region Mouse input events from DWindow
+
+		internal static IVector pxMousePosition = IVector.zero;
+		public static IVector mousePosition = IVector.zero;
+
+		private static void UpdateMousePosition ()
+		{
+			if (pxMousePosition != 0 && windows[0].size != 0)
+			{
+				mousePosition = ( ( (Vector)pxMousePosition ) / windows[0].size ) * (Vector)gridSize;
+			}
+		}
+
+		#endregion Mouse input events from DWindow
 
 		internal static void AlertWindowCreated ( DWindow window )
 		{
@@ -192,15 +234,33 @@ namespace Dae
 			// Loop while DAE is supposed to be running
 			while (IsRunning)
 			{
+				void CheckShutdown ()
+				{
+					if (IsShuttingDown)
+					{
+						IsRunning = false;
+					}
+				}
+
 				Time.Update ();
 
 				CheckWindowInput ();
+
+				if (windows.Count == 0)
+				{
+					CheckShutdown ();
+					continue;
+				}
+
+				UpdateMousePosition ();
 
 				OnFrameStart?.Invoke ();
 
 				Scheduler.allSchedulers.actual.ForEach (sch => sch.Update ());
 
 				rootBuffer.Clear (Color.black);
+
+				rootCanvas.OnMouseMove (mousePosition);
 
 				double renderTime = Performance.Analize (() => Render ());
 
@@ -222,16 +282,11 @@ namespace Dae
 				Present ();
 
 				// Check if we're supposed to shutdown DAE and thus, the main loop we're currently in
-				if (IsShuttingDown)
-				{
-					IsRunning = false; // Essentually a break...
-				}
+				CheckShutdown ();
 			}
 
 			// End of the Run method, the Start method should begin shutting down DAE now...
 		}
-
-		private static Texture fontTexture;
 
 		private static void Initialize ()
 		{

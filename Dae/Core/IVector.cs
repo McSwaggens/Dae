@@ -132,6 +132,26 @@ namespace Dae
 			return new IVector ((int)vector.x, (int)vector.y);
 		}
 
+		public static bool operator >= ( IVector a, IVector b )
+		{
+			return a.x >= b.x && a.y >= b.y;
+		}
+
+		public static bool operator <= ( IVector a, IVector b )
+		{
+			return a.x <= b.x && a.y <= b.y;
+		}
+
+		public static bool operator < ( IVector a, IVector b )
+		{
+			return a.x < b.x && a.y < b.y;
+		}
+
+		public static bool operator > ( IVector a, IVector b )
+		{
+			return a.x > b.x && a.y > b.y;
+		}
+
 		public OpenTK.Vector2 ToTK () => new OpenTK.Vector2 (x, y);
 	}
 }
